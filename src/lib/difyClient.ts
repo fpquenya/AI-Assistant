@@ -19,13 +19,20 @@ export interface TranslationResult {
 }
 
 export interface DifyResponse {
-  event: string;
-  task_id: string;
-  id: string;
-  message_id: string;
-  conversation_id: string;
-  answer: string;
-  created_at: number;
+  event?: string;
+  task_id?: string;
+  id?: string;
+  message_id?: string;
+  conversation_id?: string;
+  answer?: string;
+  created_at?: number;
+  data?: {
+    outputs?: {
+      text?: string;
+      [key: string]: any;
+    };
+    [key: string]: any;
+  };
   [key: string]: any;
 }
 
@@ -230,41 +237,50 @@ class DifyClient {
   ): Promise<TranslationResult> {
     try {
       const inputs = {
-        text: text,
+        source_text: text,
         source_language: sourceLang,
         target_language: targetLang
       };
       
-      const response = await this.callWorkflow(
+      const result = await this.callWorkflow(
         inputs,
         this.translationApiKey
       );
       
-      // 解析Dify响应
-      if (response.answer) {
-        try {
-          // 尝试解析JSON响应
-          const parsedAnswer = JSON.parse(response.answer);
-          return {
-            success: true,
-            data: {
-              translatedText: parsedAnswer.translatedText || parsedAnswer.translation || response.answer,
-              confidence: parsedAnswer.confidence || 0.95
-            }
-          };
-        } catch (parseError) {
-          // 如果不是JSON格式，直接使用answer作为翻译结果
-          return {
-            success: true,
-            data: {
-              translatedText: response.answer,
-              confidence: 0.90
-            }
-          };
-        }
+      console.log('Dify API 响应:', JSON.stringify(result, null, 2));
+      
+      // 根据用户提供的完整Dify响应格式，翻译结果在 data.outputs.text 路径
+      let translatedText = '';
+      let confidence = 0.95;
+      
+      // 按照用户提供的响应格式：{ "data": { "outputs": { "text": "Nice to meet you." } } }
+      if (result.data && result.data.outputs && result.data.outputs.text) {
+        translatedText = result.data.outputs.text;
+        console.log('✅ 从 data.outputs.text 获取翻译结果:', translatedText);
+      } else {
+        console.error('❌ 响应格式不匹配，期望路径: data.outputs.text');
+        console.log('实际响应结构:', {
+          hasData: !!result.data,
+          hasOutputs: !!(result.data && result.data.outputs),
+          hasText: !!(result.data && result.data.outputs && result.data.outputs.text),
+          availableKeys: Object.keys(result)
+        });
+        throw new Error('未收到有效的翻译结果');
       }
       
-      throw new Error('未收到有效的翻译结果');
+      // 验证翻译结果
+      if (!translatedText || translatedText.trim() === '') {
+        throw new Error('翻译结果为空');
+      }
+      
+      console.log('✅ 翻译成功:', translatedText);
+      return {
+        success: true,
+        data: {
+          translatedText,
+          confidence
+        }
+      };
     } catch (error) {
       console.error('翻译API调用失败:', error);
       return {

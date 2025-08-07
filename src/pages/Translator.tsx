@@ -1,22 +1,35 @@
 import React, { useState } from 'react';
 import { Languages, ArrowRightLeft, Copy, Volume2, Loader2, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { difyClient, TranslationResult as DifyTranslationResult } from '../lib/difyClient';
+import { translationClient, TranslationResult as DifyTranslationResult } from '../lib/translationClient';
 
-// 使用从 difyClient 导入的 DifyTranslationResult 类型
+// 使用从 translationClient 导入的 TranslationResult 类型
 
 const Translator: React.FC = () => {
   const [sourceText, setSourceText] = useState<string>('');
-  const [sourceLang, setSourceLang] = useState<string>('zh');
-  const [targetLang, setTargetLang] = useState<string>('en');
+  const [sourceLang, setSourceLang] = useState<string>('en');
+  const [targetLang, setTargetLang] = useState<string>('zh');
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<DifyTranslationResult | null>(null);
   const [error, setError] = useState<string>('');
   const [confidence, setConfidence] = useState(0);
 
-  const languages = [
+  // 源语言选项：英语和中文
+  const sourceLanguages = [
+    { code: 'en', name: '英语', flag: '🇺🇸' },
+    { code: 'zh', name: '中文', flag: '🇨🇳' }
+  ];
+
+  // 目标语言选项：中文和英语
+  const targetLanguages = [
     { code: 'zh', name: '中文', flag: '🇨🇳' },
-    { code: 'en', name: 'English', flag: '🇺🇸' },
+    { code: 'en', name: '英语', flag: '🇺🇸' }
+  ];
+
+  // 保留完整语言列表用于其他功能
+  const allLanguages = [
+    { code: 'zh', name: '中文', flag: '🇨🇳' },
+    { code: 'en', name: '英语', flag: '🇺🇸' },
     { code: 'ja', name: '日本語', flag: '🇯🇵' },
     { code: 'ko', name: '한국어', flag: '🇰🇷' },
     { code: 'fr', name: 'Français', flag: '🇫🇷' },
@@ -53,13 +66,35 @@ const Translator: React.FC = () => {
     setConfidence(0);
     
     try {
-      const apiResult = await difyClient.translate(sourceText, sourceLang, targetLang);
+      // 将语言代码转换为语言名称
+      const sourceLanguageName = getLanguageName(sourceLang);
+      const targetLanguageName = getLanguageName(targetLang);
+      
+      console.log('Translator.tsx - 语言代码转换:');
+      console.log('- sourceLang代码:', sourceLang, '-> 名称:', sourceLanguageName);
+      console.log('- targetLang代码:', targetLang, '-> 名称:', targetLanguageName);
+      
+      const apiResult = await translationClient.translate(sourceText, sourceLanguageName, targetLanguageName);
+      
+      console.log('Translator.tsx - API返回结果:', apiResult);
+      console.log('Translator.tsx - 翻译文本:', apiResult?.data?.translatedText);
+      console.log('Translator.tsx - API成功状态:', apiResult?.success);
+      console.log('Translator.tsx - 完整数据结构:', JSON.stringify(apiResult, null, 2));
       
       if (apiResult.success) {
+        console.log('Translator.tsx - 准备设置result状态');
         setResult(apiResult);
         setConfidence(apiResult.data.confidence || 0);
         setError('');
+        console.log('Translator.tsx - 设置result成功:', apiResult);
+        console.log('Translator.tsx - 翻译结果文本:', apiResult.data.translatedText);
+        
+        // 验证状态是否正确设置
+        setTimeout(() => {
+          console.log('Translator.tsx - 状态设置后验证 - result:', result);
+        }, 100);
       } else {
+        console.log('Translator.tsx - API返回失败，错误信息:', apiResult.message);
         setError(apiResult.message || '翻译失败，请重试');
         setResult(null);
         setConfidence(0);
@@ -110,11 +145,11 @@ const Translator: React.FC = () => {
   };
 
   const getLanguageName = (code: string) => {
-    return languages.find(lang => lang.code === code)?.name || code;
+    return allLanguages.find(lang => lang.code === code)?.name || code;
   };
 
   const getLanguageFlag = (code: string) => {
-    return languages.find(lang => lang.code === code)?.flag || '🌐';
+    return allLanguages.find(lang => lang.code === code)?.flag || '🌐';
   };
 
   return (
@@ -148,7 +183,7 @@ const Translator: React.FC = () => {
                 onChange={(e) => setSourceLang(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                {languages.map((lang) => (
+                {sourceLanguages.map((lang) => (
                   <option key={lang.code} value={lang.code}>
                     {lang.flag} {lang.name}
                   </option>
@@ -173,7 +208,7 @@ const Translator: React.FC = () => {
                 onChange={(e) => setTargetLang(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                {languages.map((lang) => (
+                {targetLanguages.map((lang) => (
                   <option key={lang.code} value={lang.code}>
                     {lang.flag} {lang.name}
                   </option>

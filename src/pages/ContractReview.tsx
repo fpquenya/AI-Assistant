@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import { Document, Packer, Paragraph, TextRun, HeadingLevel } from 'docx';
 import { saveAs } from 'file-saver';
-import { difyClient, ContractReviewResult } from '../lib/difyClient';
+import { contractClient, ContractReviewResult } from '../lib/contractClient';
 
 const ContractReview: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -56,7 +56,7 @@ const ContractReview: React.FC = () => {
     setResult(null);
     
     try {
-      const reviewResult = await difyClient.contractReview(selectedFile, contractType);
+      const reviewResult = await contractClient.contractReview(selectedFile, contractType);
       
       if (reviewResult.success) {
         setResult(reviewResult);
