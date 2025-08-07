@@ -1,5 +1,7 @@
 # TODO:
 
-- [x] check-current-readme: 查看当前README.md文件内容 (priority: High)
-- [x] update-readme-chinese: 更新README.md为中文版本，包含项目介绍、功能特性、技术栈、安装运行说明和使用说明 (priority: High)
-- [x] commit-to-github: 将更新的README.md提交到GitHub (priority: High)
+- [ ] check-current-branch: 检查当前Git分支状态 (priority: High)
+- [ ] create-main-branch: 创建并切换到main分支（如果不存在） (priority: High)
+- [ ] push-main-branch: 将main分支推送到远程仓库 (priority: High)
+- [ ] delete-remote-master: 删除远程仓库的master分支 (priority: High)
+- [ ] set-main-default: 设置main为默认分支 (priority: Medium)
