@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { Upload, FileText, AlertTriangle, CheckCircle, ArrowLeft, Loader2, AlertCircle } from 'lucide-react';
+import { Upload, FileText, AlertTriangle, CheckCircle, ArrowLeft, Loader2, AlertCircle, Download } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
+import { Document, Packer, Paragraph, TextRun, HeadingLevel } from 'docx';
+import { saveAs } from 'file-saver';
 import { difyClient, ContractReviewResult } from '../lib/difyClient';
 
 const ContractReview: React.FC = () => {
@@ -78,6 +80,96 @@ const ContractReview: React.FC = () => {
       case 'medium': return 'text-yellow-600 bg-yellow-50';
       case 'high': return 'text-red-600 bg-red-50';
       default: return 'text-gray-600 bg-gray-50';
+    }
+  };
+
+  const exportToDocx = async (suggestions: string | string[]) => {
+    try {
+      const content = typeof suggestions === 'string' ? suggestions : suggestions.join('\n\n');
+      
+      // 解析Markdown内容并转换为docx段落
+      const parseMarkdownToDocx = (text: string) => {
+        const lines = text.split('\n');
+        const paragraphs: any[] = [];
+        
+        lines.forEach(line => {
+          const trimmedLine = line.trim();
+          if (!trimmedLine) {
+            paragraphs.push(new Paragraph({ text: '' }));
+            return;
+          }
+          
+          // 处理标题
+          if (trimmedLine.startsWith('### ')) {
+            paragraphs.push(new Paragraph({
+              text: trimmedLine.substring(4),
+              heading: HeadingLevel.HEADING_3,
+            }));
+          } else if (trimmedLine.startsWith('## ')) {
+            paragraphs.push(new Paragraph({
+              text: trimmedLine.substring(3),
+              heading: HeadingLevel.HEADING_2,
+            }));
+          } else if (trimmedLine.startsWith('# ')) {
+            paragraphs.push(new Paragraph({
+              text: trimmedLine.substring(2),
+              heading: HeadingLevel.HEADING_1,
+            }));
+          } else if (trimmedLine.startsWith('- ') || trimmedLine.startsWith('* ')) {
+            // 处理列表项
+            paragraphs.push(new Paragraph({
+              children: [
+                new TextRun({
+                  text: `• ${trimmedLine.substring(2)}`,
+                }),
+              ],
+            }));
+          } else {
+            // 处理普通段落，包含粗体文本
+            const children: any[] = [];
+            const parts = trimmedLine.split(/\*\*(.*?)\*\*/g);
+            
+            for (let i = 0; i < parts.length; i++) {
+              if (i % 2 === 0) {
+                // 普通文本
+                if (parts[i]) {
+                  children.push(new TextRun({ text: parts[i] }));
+                }
+              } else {
+                // 粗体文本
+                children.push(new TextRun({ text: parts[i], bold: true }));
+              }
+            }
+            
+            paragraphs.push(new Paragraph({ children }));
+          }
+        });
+        
+        return paragraphs;
+      };
+      
+      const docParagraphs = parseMarkdownToDocx(content);
+      
+      const doc = new Document({
+        sections: [{
+          properties: {},
+          children: [
+            new Paragraph({
+              text: "合同审批建议",
+              heading: HeadingLevel.TITLE,
+            }),
+            new Paragraph({ text: '' }), // 空行
+            ...docParagraphs,
+          ],
+        }],
+      });
+
+      const blob = await Packer.toBlob(doc);
+      const timestamp = new Date().toISOString().replace(/[:.]/g, '-').split('T')[0];
+      saveAs(blob, `合同审批建议_${timestamp}.docx`);
+    } catch (error) {
+      console.error('导出失败:', error);
+      alert('导出失败，请重试');
     }
   };
 
@@ -213,7 +305,16 @@ const ContractReview: React.FC = () => {
               {/* 审批建议 */}
               {result.data.suggestions && (
                 <div className="bg-white rounded-lg border p-6">
-                  <h3 className="text-lg font-semibold mb-4 text-green-700">审批建议</h3>
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-semibold text-green-700">审批建议</h3>
+                    <button
+                      onClick={() => exportToDocx(result.data.suggestions)}
+                      className="inline-flex items-center px-3 py-2 text-sm font-medium text-blue-600 bg-blue-50 border border-blue-200 rounded-md hover:bg-blue-100 hover:border-blue-300 transition-colors"
+                    >
+                      <Download className="h-4 w-4 mr-1" />
+                      导出DOCX
+                    </button>
+                  </div>
                   <div className="prose prose-sm max-w-none text-gray-700 leading-relaxed">
                     <ReactMarkdown
                       components={{
