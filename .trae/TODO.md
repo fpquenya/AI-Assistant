@@ -1,7 +1,7 @@
 # TODO:
 
-- [ ] check-current-branch: 检查当前Git分支状态 (priority: High)
-- [ ] create-main-branch: 创建并切换到main分支（如果不存在） (priority: High)
-- [ ] push-main-branch: 将main分支推送到远程仓库 (priority: High)
-- [ ] delete-remote-master: 删除远程仓库的master分支 (priority: High)
-- [ ] set-main-default: 设置main为默认分支 (priority: Medium)
+- [x] create-frontend-dockerfile: 为前端React应用创建Dockerfile (priority: High)
+- [x] create-backend-dockerfile: 为后端FastAPI应用创建Dockerfile (priority: High)
+- [x] create-docker-compose: 创建docker-compose.yml文件，配置前后端服务、环境变量、端口映射和网络 (priority: High)
+- [x] create-dockerignore: 创建.dockerignore文件优化构建 (priority: Medium)
+- [x] update-readme-docker: 更新README.md添加Docker部署说明 (priority: Medium)

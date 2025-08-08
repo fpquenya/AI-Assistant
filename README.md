@@ -123,6 +123,94 @@ npm run check
 npm run lint
 ```
 
+## 🐳 Docker部署
+
+### 使用Docker Compose一键部署
+
+本项目支持使用Docker进行容器化部署，只需一条命令即可启动完整的前后端服务。
+
+#### 前置要求
+- Docker >= 20.0.0
+- Docker Compose >= 2.0.0
+
+#### 快速启动
+
+1. **克隆项目**
+```bash
+git clone <your-repository-url>
+cd AI工具箱
+```
+
+2. **配置环境变量**
+```bash
+# 复制Docker环境变量模板
+cp .env.docker .env.docker.local
+
+# 编辑环境变量文件，配置Dify API密钥
+vim .env.docker.local
+# 或使用其他编辑器修改以下配置：
+# DIFY_API_URL=https://api.dify.ai/v1
+# DIFY_CONTRACT_API_KEY=your_contract_api_key
+# DIFY_TRANSLATION_API_KEY=your_translation_api_key
+```
+
+3. **一键启动服务**
+```bash
+docker-compose up -d
+```
+
+#### 服务访问
+- **前端应用**：http://localhost:80
+- **后端API**：http://localhost:8000
+- **API文档**：http://localhost:8000/docs
+
+#### 常用Docker命令
+
+```bash
+# 启动服务（后台运行）
+docker-compose up -d
+
+# 查看服务状态
+docker-compose ps
+
+# 查看服务日志
+docker-compose logs -f
+
+# 停止服务
+docker-compose down
+
+# 重新构建并启动
+docker-compose up --build -d
+
+# 清理所有容器和数据卷
+docker-compose down -v
+```
+
+#### Docker架构说明
+
+- **前端容器**：基于Nginx的多阶段构建，包含React应用的生产版本
+- **后端容器**：基于Python 3.11-slim的FastAPI应用
+- **网络配置**：使用自定义桥接网络确保服务间通信
+- **数据持久化**：后端日志通过数据卷持久化存储
+- **健康检查**：内置健康检查确保服务正常运行
+
+#### 生产环境部署建议
+
+1. **安全配置**
+   - 修改默认端口映射
+   - 配置HTTPS证书
+   - 设置防火墙规则
+
+2. **性能优化**
+   - 配置Nginx缓存策略
+   - 启用Gzip压缩
+   - 设置合适的资源限制
+
+3. **监控和日志**
+   - 配置日志轮转
+   - 集成监控系统
+   - 设置告警机制
+
 ## 📁 项目结构
 
 ```
