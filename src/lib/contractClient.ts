@@ -5,6 +5,9 @@ export interface ContractReviewResult {
     riskLevel: 'low' | 'medium' | 'high';
     suggestions: string[];
     issues: string[];
+    riskScore?: number;     // 风险评分 (0-100)
+    safetyIndex?: number;   // 安全指数 (0-100)
+    complianceRate?: number; // 合规率 (0-100)
   };
   message?: string;
 }
