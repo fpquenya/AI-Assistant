@@ -1,91 +1,180 @@
-# Git 相关
-.git
-.gitignore
-.gitattributes
-
-# Node.js 相关
 node_modules
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+.pnpm-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage
+*.lcov
+
+# nyc test coverage
+.nyc_output
+
+# Dependency directories
+node_modules/
+jspm_packages/
+
+# Optional npm cache directory
 .npm
-.yarn
 
-# Python 相关
-__pycache__
-*.pyc
-*.pyo
-*.pyd
-.Python
-build
-develop-eggs
-dist
-downloads
-eggs
-.eggs
-lib
-lib64
-parts
-sdist
-var
-wheels
-*.egg-info
-.installed.cfg
-*.egg
-.venv
-venv
-ENV
-env
+# Optional eslint cache
+.eslintcache
 
-# IDE 相关
-.vscode
-.idea
-*.swp
-*.swo
-*~
+# Microbundle cache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
 
-# 操作系统相关
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
+# Optional REPL history
+.node_repl_history
 
-# 日志文件
-*.log
-logs
+# Output of 'npm pack'
+*.tgz
 
-# 临时文件
-*.tmp
-*.temp
+# Yarn Integrity file
+.yarn-integrity
 
-# 环境变量文件
+# dotenv environment variables file
 .env
+.env.test
+.env.production
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
-.env.docker.local
 
-# 构建产物
+# parcel-bundler cache (https://parceljs.org/)
+.cache
+.parcel-cache
+
+# Next.js build output
+.next
+
+# Nuxt.js build / generate output
+.nuxt
 dist
-build
 
-# 测试覆盖率
-coverage
-.nyc_output
+# Gatsby files
+.cache/
+public
 
-# Docker 相关
-Dockerfile*
-docker-compose*
-.dockerignore
+# Storybook build outputs
+.out
+.storybook-out
 
-# 文档
-*.md
-README*
-LICENSE
+# Temporary folders
+tmp/
+temp/
 
-# 其他
-.trae
+# Logs
+logs
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+PYTHONPATH
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# celery beat schedule file
+celerybeat-schedule
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
