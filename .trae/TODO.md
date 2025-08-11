@@ -1,5 +1,7 @@
 # TODO:
 
-- [x] update-git-token: 使用新的GitHub token (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) 重新配置Git认证 (priority: High)
-- [x] update-remote-url: 更新远程仓库URL为 fpquenya/AI-Assistant (priority: High)
-- [ ] push-with-new-token: 使用新的token和仓库地址推送代码到GitHub (**IN PROGRESS**) (priority: High)
+- [x] clear-git-config: 清除所有Git全局配置（用户信息、token、代理等） (priority: High)
+- [x] clear-proxy-config: 移除所有代理配置设置 (priority: High)
+- [x] setup-new-token: 使用新token (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) 配置GitHub认证 (priority: High)
+- [x] setup-remote-url: 设置远程仓库URL为 fpquenya/AI-Assistant (priority: High)
+- [ ] push-to-github: 推送代码到GitHub远程仓库 (**IN PROGRESS**) (priority: High)
