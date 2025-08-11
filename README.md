@@ -1,8 +1,13 @@
 # AI工具箱
 
-一个基于React + TypeScript + Vite构建的智能AI工具集合平台，集成了多种实用的AI功能，为用户提供便捷的智能化服务。
+一个基于AI的多功能工具箱，包含翻译和合同审批功能。
 
-## 🚀 功能特性
+## 功能特性
+
+### 🌐 智能翻译
+- 支持多种语言互译
+- 基于Dify AI平台的高质量翻译
+- 简洁直观的用户界面
 
 ### 📋 合同审批
 - **智能合同分析**：支持多种合同类型的智能识别和分析
@@ -26,20 +31,20 @@
 - **语言切换**：支持源语言和目标语言的快速切换
 - **常用翻译建议**：提供常用翻译场景的快捷选项
 
-## 🛠️ 技术栈
+## 技术栈
 
-### 前端技术
-- **前端框架**：React 18
-- **开发语言**：TypeScript
-- **构建工具**：Vite
-- **样式框架**：Tailwind CSS
-- **UI组件**：自定义组件 + Lucide React图标
-- **路由管理**：React Router DOM
-- **状态管理**：Zustand
-- **Markdown渲染**：React Markdown
-- **文档导出**：docx库
-- **HTTP客户端**：Axios
+### 前端
+- **React 18** + **TypeScript**
+- **Vite** - 快速构建工具
+- **Tailwind CSS** - 样式框架
+- **Lucide React** - 图标库
 
+### 后端
+- **FastAPI** - 现代Python Web框架
+- **Pydantic** - 数据验证
+- **HTTPX** - 异步HTTP客户端
+
+<<<<<<< HEAD
 ### 后端技术
 - **后端框架**：FastAPI
 - **开发语言**：Python 3.8+
@@ -51,178 +56,77 @@
 - **异步文件操作**：aiofiles
 - **数据验证**：Pydantic
 - **HTTP请求处理**：requests
+=======
+### AI服务
+- **Dify AI平台** - 提供翻译和合同审批AI能力
+>>>>>>> 8d686c0d8f93d2d039037c10757b0693daae2f4e
 
-## 📦 安装与运行
+## 快速开始
 
-### 环境要求
-- Node.js >= 18.0.0
-- Python >= 3.8
-- npm 或 pnpm
-- pip (Python包管理器)
-
-### 安装依赖
-
-#### 前端依赖
-```bash
-# 使用npm
-npm install
-
-# 或使用pnpm
-pnpm install
-```
-
-#### 后端依赖
-```bash
-# 进入后端目录
-cd backend
-
-# 安装Python依赖
-pip install fastapi uvicorn httpx python-multipart
-```
-
-### 环境配置
-1. 复制环境变量模板文件：
-```bash
-cp .env.example .env
-```
-
-2. 配置环境变量：
-```env
-# Dify API配置
-VITE_DIFY_API_KEY=your_dify_api_key
-VITE_DIFY_BASE_URL=your_dify_base_url
-```
-
-### 启动开发服务器
-
-#### 启动后端服务
-```bash
-# 进入后端目录
-cd backend
-
-# 启动FastAPI服务器
-python main.py
-```
-后端服务将运行在 `http://localhost:8000`
-
-#### 启动前端服务
-```bash
-# 在项目根目录
-# 使用npm
-npm run dev
-
-# 或使用pnpm
-pnpm dev
-```
-前端应用将运行在 `http://localhost:5173`
-
-### 构建生产版本
-```bash
-# 使用npm
-npm run build
-
-# 或使用pnpm
-pnpm build
-```
-
-### 代码检查
-```bash
-# 类型检查
-npm run check
-
-# ESLint检查
-npm run lint
-```
-
-## 🐳 Docker部署
-
-### 使用Docker Compose一键部署
-
-本项目支持使用Docker进行容器化部署，只需一条命令即可启动完整的前后端服务。
-
-#### 前置要求
-- Docker >= 20.0.0
-- Docker Compose >= 2.0.0
-
-#### 快速启动
+### 使用Docker部署（推荐）
 
 1. **克隆项目**
 ```bash
-git clone <your-repository-url>
-cd AI工具箱
+git clone https://github.com/fpquenya/AI-Assistant.git
+cd AI-Assistant
 ```
 
 2. **配置环境变量**
 ```bash
-# 复制Docker环境变量模板
-cp .env.docker .env.docker.local
-
-# 编辑环境变量文件，配置Dify API密钥
-vim .env.docker.local
-# 或使用其他编辑器修改以下配置：
-# DIFY_API_URL=https://api.dify.ai/v1
-# DIFY_CONTRACT_API_KEY=your_contract_api_key
-# DIFY_TRANSLATION_API_KEY=your_translation_api_key
+cp .env.docker .env
+# 编辑.env文件，填入你的Dify API密钥和应用ID
 ```
 
-3. **一键启动服务**
+3. **启动服务**
 ```bash
-docker-compose up -d
+# Windows
+docker-start.bat
+
+# Linux/Mac
+./docker-start.sh
 ```
 
-#### 服务访问
-- **前端应用**：http://localhost:80
-- **后端API**：http://localhost:8000
-- **API文档**：http://localhost:8000/docs
+4. **访问应用**
+- 前端：http://localhost:3000
+- 后端API：http://localhost:8000
 
-#### 常用Docker命令
+### 本地开发
 
+#### 前端开发
 ```bash
-# 启动服务（后台运行）
-docker-compose up -d
-
-# 查看服务状态
-docker-compose ps
-
-# 查看服务日志
-docker-compose logs -f
-
-# 停止服务
-docker-compose down
-
-# 重新构建并启动
-docker-compose up --build -d
-
-# 清理所有容器和数据卷
-docker-compose down -v
+npm install
+npm run dev
 ```
 
-#### Docker架构说明
+#### 后端开发
+```bash
+cd backend
+pip install -r requirements.txt
+uvicorn main:app --reload
+```
 
-- **前端容器**：基于Nginx的多阶段构建，包含React应用的生产版本
-- **后端容器**：基于Python 3.11-slim的FastAPI应用
-- **网络配置**：使用自定义桥接网络确保服务间通信
-- **数据持久化**：后端日志通过数据卷持久化存储
-- **健康检查**：内置健康检查确保服务正常运行
+## 环境变量配置
 
-#### 生产环境部署建议
+创建`.env`文件并配置以下变量：
 
-1. **安全配置**
-   - 修改默认端口映射
-   - 配置HTTPS证书
-   - 设置防火墙规则
+```env
+# Dify AI配置
+DIFY_API_KEY=your_dify_api_key_here
+DIFY_BASE_URL=https://api.dify.ai/v1
+DIFY_TRANSLATION_APP_ID=your_translation_app_id_here
+DIFY_CONTRACT_APP_ID=your_contract_app_id_here
 
-2. **性能优化**
-   - 配置Nginx缓存策略
-   - 启用Gzip压缩
-   - 设置合适的资源限制
+# 前端配置
+VITE_API_BASE_URL=http://localhost:8000
+VITE_DIFY_API_KEY=your_dify_api_key_here
+VITE_DIFY_BASE_URL=https://api.dify.ai/v1
+```
 
-3. **监控和日志**
-   - 配置日志轮转
-   - 集成监控系统
-   - 设置告警机制
+## API文档
 
-## 📁 项目结构
+启动后端服务后，访问 http://localhost:8000/docs 查看自动生成的API文档。
+
+## 项目结构
 
 ```
 AI工具箱/
@@ -257,7 +161,7 @@ AI工具箱/
 └── README.md               # 项目说明
 ```
 
-## 🎯 使用指南
+## 使用指南
 
 ### 合同审批功能
 1. 进入合同审批页面
@@ -362,17 +266,25 @@ Content-Type: application/json
 - 🎉 FastAPI后端服务
 - 🎉 Dify AI服务集成
 
-## 🤝 贡献指南
+## 贡献指南
 
-欢迎提交Issue和Pull Request来帮助改进项目！
+1. Fork 项目
+2. 创建特性分支 (`git checkout -b feature/AmazingFeature`)
+3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
+4. 推送到分支 (`git push origin feature/AmazingFeature`)
+5. 打开 Pull Request
 
-## 📄 许可证
+## 许可证
 
-MIT License
+本项目采用 MIT 许可证 - 查看 [LICENSE](LICENSE) 文件了解详情。
 
-## 🔗 相关链接
+## 联系方式
 
-- [React官方文档](https://react.dev/)
-- [TypeScript官方文档](https://www.typescriptlang.org/)
-- [Vite官方文档](https://vitejs.dev/)
-- [Tailwind CSS官方文档](https://tailwindcss.com/)
+如有问题或建议，请通过以下方式联系：
+
+- 项目Issues：[GitHub Issues](https://github.com/fpquenya/AI-Assistant/issues)
+- 邮箱：your-email@example.com
+
+---
+
+⭐ 如果这个项目对你有帮助，请给它一个星标！
