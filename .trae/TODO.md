@@ -1,8 +1,5 @@
 # TODO:
 
-- [x] configure-git-user: 配置Git用户信息（用户名和邮箱） (priority: High)
-- [x] configure-git-token: 配置GitHub token认证 (priority: High)
-- [x] check-git-status: 检查当前Git仓库状态 (priority: High)
-- [ ] add-all-files: 添加所有文件到Git暂存区 (**IN PROGRESS**) (priority: High)
-- [ ] commit-changes: 提交所有更改到本地仓库 (priority: High)
-- [ ] push-to-github: 推送代码到GitHub远程仓库 (priority: High)
+- [x] update-git-token: 使用新的GitHub token (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) 重新配置Git认证 (priority: High)
+- [x] update-remote-url: 更新远程仓库URL为 fpquenya/AI-Assistant (priority: High)
+- [ ] push-with-new-token: 使用新的token和仓库地址推送代码到GitHub (**IN PROGRESS**) (priority: High)
