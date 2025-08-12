@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FileText, Languages, ArrowRight, Sparkles, Shield, Zap } from 'lucide-react';
+import { FileText, Languages, ArrowRight, Sparkles } from 'lucide-react';
 
 const Home: React.FC = () => {
   const tools = [
@@ -26,11 +26,7 @@ const Home: React.FC = () => {
     }
   ];
 
-  const stats = [
-    { label: '累计处理文档', value: '10,000+', icon: FileText },
-    { label: '翻译准确率', value: '99.5%', icon: Shield },
-    { label: '处理速度', value: '< 3秒', icon: Zap }
-  ];
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
@@ -68,22 +64,15 @@ const Home: React.FC = () => {
             让复杂的工作变得简单高效。
           </p>
           
-          {/* Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-            {stats.map((stat, index) => {
-              const IconComponent = stat.icon;
-              return (
-                <div key={index} className="bg-white rounded-lg shadow-md p-6">
-                  <div className="flex items-center justify-center mb-4">
-                    <div className="bg-blue-100 p-3 rounded-full">
-                      <IconComponent className="h-6 w-6 text-blue-600" />
-                    </div>
-                  </div>
-                  <div className="text-3xl font-bold text-gray-900 mb-2">{stat.value}</div>
-                  <div className="text-gray-600">{stat.label}</div>
-                </div>
-              );
-            })}
+          {/* DingTalk AI Assistant */}
+          <div className="mb-16">
+            <iframe 
+              src="https://agent.dingtalk.com/copilot?code=GJ8mrGlJQC&channel=" 
+              style={{width: '100%', height: '100%', minHeight: '700px'}} 
+              frameBorder="0" 
+              allow="microphone"
+            >
+            </iframe>
           </div>
         </div>
       </section>
@@ -142,54 +131,9 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h3 className="text-3xl font-bold text-gray-900 mb-4">为什么选择我们</h3>
-            <p className="text-lg text-gray-600">先进的AI技术，为您提供专业可靠的服务</p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Shield className="h-8 w-8 text-blue-600" />
-              </div>
-              <h4 className="text-xl font-semibold text-gray-900 mb-2">安全可靠</h4>
-              <p className="text-gray-600">企业级安全保障，数据加密传输，保护您的隐私</p>
-            </div>
-            
-            <div className="text-center">
-              <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Zap className="h-8 w-8 text-green-600" />
-              </div>
-              <h4 className="text-xl font-semibold text-gray-900 mb-2">高效快速</h4>
-              <p className="text-gray-600">AI智能处理，秒级响应，大幅提升工作效率</p>
-            </div>
-            
-            <div className="text-center">
-              <div className="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Sparkles className="h-8 w-8 text-purple-600" />
-              </div>
-              <h4 className="text-xl font-semibold text-gray-900 mb-2">智能精准</h4>
-              <p className="text-gray-600">基于先进算法，提供精准分析和专业建议</p>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="flex items-center justify-center space-x-2 mb-4">
-            <Sparkles className="h-6 w-6" />
-            <span className="text-xl font-bold">AI工具箱</span>
-          </div>
-          <p className="text-gray-400">
-            © 2024 AI工具箱. 让智能AI为您的工作赋能.
-          </p>
-        </div>
-      </footer>
+
+
     </div>
   );
 };

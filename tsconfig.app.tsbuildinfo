@@ -1,0 +1,1 @@
+{"root":["./src/vite-env.d.ts","./src/hooks/usetheme.ts","./src/lib/contractclient.ts","./src/lib/difyclient.ts","./src/lib/translationclient.ts","./src/lib/utils.ts","./src/app.tsx","./src/main.tsx","./src/components/empty.tsx","./src/pages/contractreview.tsx","./src/pages/home.tsx","./src/pages/translator.tsx"],"version":"5.6.3"}

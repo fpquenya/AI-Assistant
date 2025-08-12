@@ -14,7 +14,7 @@ export class TranslationClient {
   private baseURL: string;
 
   constructor() {
-    this.baseURL = 'http://localhost:8000';
+    this.baseURL = 'http://127.0.0.1:5173';
   }
 
 

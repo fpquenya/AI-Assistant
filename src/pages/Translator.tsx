@@ -12,7 +12,7 @@ const Translator: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<DifyTranslationResult | null>(null);
   const [error, setError] = useState<string>('');
-  const [confidence, setConfidence] = useState(0);
+  const [, setConfidence] = useState(0);
 
   // 源语言选项：英语和中文
   const sourceLanguages = [
@@ -360,9 +360,11 @@ const Translator: React.FC = () => {
                   </button>
                   <button
                     onClick={() => {
-                      const temp = sourceText;
-                      setSourceText(result?.data.translatedText || '');
-                      setResult(null);
+                      const tempText = sourceText;
+                       setSourceText(result?.data.translatedText || '');
+                       setResult(null);
+                       // Store original text for potential undo functionality
+                       console.log('Original text stored:', tempText);
                       const tempLang = sourceLang;
                       setSourceLang(targetLang);
                       setTargetLang(tempLang);

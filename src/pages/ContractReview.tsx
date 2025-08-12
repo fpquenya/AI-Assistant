@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Upload, FileText, AlertTriangle, CheckCircle, ArrowLeft, Loader2, AlertCircle, Download, Shield, TrendingUp, BarChart3, Award, Clock, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
@@ -17,6 +17,8 @@ const ContractReview: React.FC = () => {
     { value: 'service', label: '服务类' },
     { value: 'procurement', label: '采购类' }
   ];
+
+
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -81,14 +83,15 @@ const ContractReview: React.FC = () => {
     }
   };
 
-  const getRiskLevelColor = (level: string) => {
-    switch (level) {
-      case 'low': return 'text-green-600 bg-green-50';
-      case 'medium': return 'text-yellow-600 bg-yellow-50';
-      case 'high': return 'text-red-600 bg-red-50';
-      default: return 'text-gray-600 bg-gray-50';
-    }
-  };
+  // Utility function for risk level colors (reserved for future use)
+  // const getRiskLevelColor = (level: string) => {
+  //   switch (level) {
+  //     case 'low': return 'text-green-600 bg-green-50';
+  //     case 'medium': return 'text-yellow-600 bg-yellow-50';
+  //     case 'high': return 'text-red-600 bg-red-50';
+  //     default: return 'text-gray-600 bg-gray-50';
+  //   }
+  // };
 
   // 从API返回的suggestions中解析指标数值
   const parseMetricsFromSuggestions = (suggestions: string | string[]) => {
@@ -110,25 +113,19 @@ const ContractReview: React.FC = () => {
   const calculateRiskMetrics = (result: ContractReviewResult) => {
     const issueCount = result.data.issues.length;
     let riskScore = 0;
-    let riskLevel = 'low';
-    
     // 基于问题数量计算风险评分（备用逻辑）
     if (issueCount === 0) {
       riskScore = 95;
-      riskLevel = 'low';
     } else if (issueCount <= 2) {
       riskScore = 80;
-      riskLevel = 'low';
     } else if (issueCount <= 5) {
       riskScore = 60;
-      riskLevel = 'medium';
     } else {
       riskScore = 30;
-      riskLevel = 'high';
     }
     
     // 首先尝试从suggestions中解析指标
-    let parsedMetrics = { riskScore: null, safetyIndex: null, complianceRate: null };
+    let parsedMetrics: { riskScore: number | null; safetyIndex: number | null; complianceRate: number | null } = { riskScore: null, safetyIndex: null, complianceRate: null };
     if (result.data.suggestions) {
       parsedMetrics = parseMetricsFromSuggestions(result.data.suggestions);
     }
@@ -164,7 +161,7 @@ const ContractReview: React.FC = () => {
       // 解析Markdown内容并转换为docx段落
       const parseMarkdownToDocx = (text: string) => {
         const lines = text.split('\n');
-        const paragraphs: any[] = [];
+        const paragraphs: Array<Paragraph> = [];
         
         lines.forEach(line => {
           const trimmedLine = line.trim();
@@ -200,7 +197,7 @@ const ContractReview: React.FC = () => {
             }));
           } else {
             // 处理普通段落，包含粗体文本
-            const children: any[] = [];
+            const children: Array<TextRun> = [];
             const parts = trimmedLine.split(/\*\*(.*?)\*\*/g);
             
             for (let i = 0; i < parts.length; i++) {
@@ -264,10 +261,12 @@ const ContractReview: React.FC = () => {
         </div>
         
         <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-6">
-          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-6 flex items-center">
-            <FileText className="mr-2 sm:mr-3 text-blue-600 h-6 w-6 sm:h-8 sm:w-8" />
-            <span className="truncate">合同智能审批</span>
-          </h1>
+          <div className="mb-6">
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-900 flex items-center">
+                <FileText className="mr-2 sm:mr-3 text-blue-600 h-6 w-6 sm:h-8 sm:w-8" />
+                <span className="truncate">合同智能审批</span>
+              </h1>
+            </div>
           
           {/* 文件上传区域 */}
           <div className="mb-6">
@@ -334,9 +333,27 @@ const ContractReview: React.FC = () => {
 
           {/* 错误信息 */}
           {error && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md flex items-center">
-              <AlertCircle className="h-5 w-5 text-red-500 mr-2" />
-              <span className="text-red-700">{error}</span>
+            <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-md">
+              <div className="flex items-start">
+                <AlertCircle className="h-5 w-5 text-red-500 mr-3 mt-0.5 flex-shrink-0" />
+                <div className="flex-1">
+                  <div className="text-red-700 font-medium mb-2">{error}</div>
+                  {error.includes('网络连接失败') && (
+                    <div className="text-sm text-red-600 space-y-1">
+                      <p>• 请检查网络连接是否正常</p>
+                      <p>• 确认后端服务是否正在运行</p>
+                      <p>• 尝试刷新页面重新连接</p>
+                    </div>
+                  )}
+                  {error.includes('procurement') && (
+                    <div className="text-sm text-red-600 space-y-1">
+                      <p>• 采购类合同审批功能可能暂时不可用</p>
+                      <p>• 请尝试选择其他合同类型</p>
+                      <p>• 或稍后重试采购类合同审批</p>
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
           )}
 
@@ -596,15 +613,15 @@ const ContractReview: React.FC = () => {
                       <div className="prose prose-lg max-w-none text-gray-700 leading-relaxed">
                         <ReactMarkdown
                           components={{
-                            h1: ({children}) => <h1 className="text-3xl font-bold text-gray-900 mb-6 mt-8 border-b border-gray-200 pb-2">{children}</h1>,
-                            h2: ({children}) => <h2 className="text-2xl font-bold text-gray-800 mb-4 mt-6 flex items-center"><Award className="h-6 w-6 mr-2 text-blue-600" />{children}</h2>,
-                            h3: ({children}) => <h3 className="text-xl font-bold text-gray-800 mb-3 mt-5 text-green-700">{children}</h3>,
-                            p: ({children}) => <p className="mb-4 leading-relaxed text-gray-700">{children}</p>,
-                            ul: ({children}) => <ul className="list-none mb-4 space-y-2">{children}</ul>,
-                            ol: ({children}) => <ol className="list-decimal list-inside mb-4 space-y-2 ml-4">{children}</ol>,
-                            li: ({children}) => <li className="flex items-start"><CheckCircle className="h-4 w-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" /><span>{children}</span></li>,
-                            strong: ({children}) => <strong className="font-semibold text-gray-900 bg-yellow-100 px-1 rounded">{children}</strong>,
-                            em: ({children}) => <em className="italic text-blue-700">{children}</em>
+                            h1: ({children, ...props}) => <h1 className="text-3xl font-bold text-gray-900 mb-6 mt-8 border-b border-gray-200 pb-2" {...props}>{children}</h1>,
+                            h2: ({children, ...props}) => <h2 className="text-2xl font-bold text-gray-800 mb-4 mt-6 flex items-center" {...props}><Award className="h-6 w-6 mr-2 text-blue-600" />{children}</h2>,
+                            h3: ({children, ...props}) => <h3 className="text-xl font-bold text-gray-800 mb-3 mt-5 text-green-700" {...props}>{children}</h3>,
+                            p: ({children, ...props}) => <p className="mb-4 leading-relaxed text-gray-700" {...props}>{children}</p>,
+                            ul: ({children, ...props}) => <ul className="list-none mb-4 space-y-2" {...props}>{children}</ul>,
+                            ol: ({children, ...props}) => <ol className="list-decimal list-inside mb-4 space-y-2 ml-4" {...props}>{children}</ol>,
+                            li: ({children, ...props}) => <li className="flex items-start" {...props}><CheckCircle className="h-4 w-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" /><span>{children}</span></li>,
+                            strong: ({children, ...props}) => <strong className="font-semibold text-gray-900 bg-yellow-100 px-1 rounded" {...props}>{children}</strong>,
+                            em: ({children, ...props}) => <em className="italic text-blue-700" {...props}>{children}</em>
                           }}
                         >
                           {typeof result.data.suggestions === 'string' 

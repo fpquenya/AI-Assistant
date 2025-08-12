@@ -14,12 +14,18 @@ load_dotenv()
 app = FastAPI(title="AI工具箱后端API", version="1.0.0")
 
 # CORS配置
-allowed_origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:5173").split(",")
+allowed_origins = [
+    "http://localhost:3000",
+    "http://localhost:5173", 
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:5173"
+]
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
 
@@ -51,6 +57,23 @@ async def root():
 @app.get("/health")
 async def health_check():
     return {"status": "healthy", "service": "ai-toolbox-backend"}
+
+@app.get("/api/health")
+async def api_health_check():
+    return {"status": "healthy", "service": "ai-toolbox-backend"}
+
+# 添加OPTIONS请求处理器以支持CORS预检请求
+@app.options("/api/translation/translate")
+async def options_translation_translate():
+    return {"message": "OK"}
+
+@app.options("/api/contract/review")
+async def options_contract_review():
+    return {"message": "OK"}
+
+@app.options("/api/contract/upload")
+async def options_contract_upload():
+    return {"message": "OK"}
 
 # 合同审批相关API
 @app.post("/api/contract/upload", response_model=Dict[str, Any])
@@ -462,6 +485,6 @@ async def check_translation_connection():
 
 if __name__ == "__main__":
     import uvicorn
-    host = os.getenv("HOST", "0.0.0.0")
-    port = int(os.getenv("PORT", 8000))
+    host = os.getenv("HOST", "127.0.0.1")
+    port = int(os.getenv("PORT", 5173))
     uvicorn.run(app, host=host, port=port)

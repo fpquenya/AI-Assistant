@@ -29,11 +29,11 @@ export interface DifyResponse {
   data?: {
     outputs?: {
       text?: string;
-      [key: string]: any;
+      [key: string]: unknown;
     };
-    [key: string]: any;
+    [key: string]: unknown;
   };
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface FileUploadResponse {
@@ -50,7 +50,7 @@ class DifyClient {
   private baseURL = 'http://113.45.43.33/v1';
   private contractApiKey = 'app-WFfmK3NfqwSUf87JNJ3VJGHA';
   private translationApiKey = 'app-0MyT6ZEiwiQO9KIidL6gB1EO';
-  private contractWorkflowId = '17b1dba4-7442-4504-832a-dfa19774cbe5';
+  // Contract workflow ID reserved for future implementation: '17b1dba4-7442-4504-832a-dfa19774cbe5'
   
   constructor() {
     this.baseURL = 'http://113.45.43.33/v1';
@@ -88,11 +88,11 @@ class DifyClient {
    * 通用工作流调用方法
    */
   private async callWorkflow(
-    inputs: Record<string, any>, 
+    inputs: Record<string, unknown>, 
     apiKey: string,
     fileIds?: string[]
   ): Promise<DifyResponse> {
-    const requestBody: any = {
+    const requestBody: Record<string, unknown> = {
       inputs,
       response_mode: 'blocking',
       user: 'ai-toolbox-user'
@@ -251,7 +251,7 @@ class DifyClient {
       
       // 根据用户提供的完整Dify响应格式，翻译结果在 data.outputs.text 路径
       let translatedText = '';
-      let confidence = 0.95;
+      const confidence = 0.95;
       
       // 按照用户提供的响应格式：{ "data": { "outputs": { "text": "Nice to meet you." } } }
       if (result.data && result.data.outputs && result.data.outputs.text) {

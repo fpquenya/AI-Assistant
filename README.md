@@ -1,13 +1,18 @@
 # AI工具箱
 
-一个基于AI的多功能工具箱，包含翻译和合同审批功能。
+一个基于AI的多功能工具箱，包含智能翻译和合同审批功能。
 
-## 功能特性
+## 🌟 功能特性
 
 ### 🌐 智能翻译
-- 支持多种语言互译
-- 基于Dify AI平台的高质量翻译
-- 简洁直观的用户界面
+- **多语言支持**：支持中文、英语、日语、韩语、法语、德语、西班牙语等多种语言互译
+- **置信度显示**：实时显示翻译结果的置信度评分
+- **长文本支持**：支持长篇文档和文章的翻译处理
+- **实时翻译**：快速响应的翻译服务，60秒超时保障
+- **专业术语**：基于Dify工作流提供准确的翻译结果
+- **语音功能**：支持翻译结果的语音朗读
+- **一键复制**：支持翻译结果的快速复制
+- **语言切换**：支持源语言和目标语言的快速切换
 
 ### 📋 合同审批
 - **智能合同分析**：支持多种合同类型的智能识别和分析
@@ -20,94 +25,44 @@
 - **文件类型验证**：支持PDF、DOC、DOCX、TXT等多种文件格式
 - **文件大小限制**：最大支持10MB文件上传
 
-### 🌐 翻译功能
-- **多语言支持**：支持中文、英语、日语、韩语、法语、德语、西班牙语等多种语言互译
-- **置信度显示**：实时显示翻译结果的置信度评分
-- **长文本支持**：支持长篇文档和文章的翻译处理
-- **实时翻译**：快速响应的翻译服务，60秒超时保障
-- **专业术语**：基于Dify工作流提供准确的翻译结果
-- **语音功能**：支持翻译结果的语音朗读
-- **一键复制**：支持翻译结果的快速复制
-- **语言切换**：支持源语言和目标语言的快速切换
-- **常用翻译建议**：提供常用翻译场景的快捷选项
+## 🛠️ 技术栈
 
-## 技术栈
+### 前端技术
+- **React 18** + **TypeScript** - 现代化前端框架
+- **Vite** - 快速构建工具和开发服务器
+- **Tailwind CSS** - 实用优先的CSS框架
+- **Lucide React** - 美观的图标库
+- **React Router** - 客户端路由管理
 
-### 前端
-- **React 18** + **TypeScript**
-- **Vite** - 快速构建工具
-- **Tailwind CSS** - 样式框架
-- **Lucide React** - 图标库
-
-### 后端
-- **FastAPI** - 现代Python Web框架
-- **Pydantic** - 数据验证
-- **HTTPX** - 异步HTTP客户端
-
-<<<<<<< HEAD
 ### 后端技术
-- **后端框架**：FastAPI
-- **开发语言**：Python 3.8+
-- **异步HTTP客户端**：httpx
-- **CORS支持**：FastAPI CORS中间件
-- **文件处理**：python-multipart (multipart/form-data)
-- **AI服务集成**：Dify工作流API
-- **环境变量管理**：python-dotenv
-- **异步文件操作**：aiofiles
-- **数据验证**：Pydantic
-- **HTTP请求处理**：requests
-=======
+- **FastAPI** - 现代Python Web框架
+- **Python 3.8+** - 开发语言
+- **Pydantic** - 数据验证和序列化
+- **HTTPX** - 异步HTTP客户端
+- **python-multipart** - 文件上传处理
+- **aiofiles** - 异步文件操作
+- **CORS中间件** - 跨域请求支持
+
 ### AI服务
 - **Dify AI平台** - 提供翻译和合同审批AI能力
->>>>>>> 8d686c0d8f93d2d039037c10757b0693daae2f4e
+- **工作流API** - 智能处理和分析
 
-## 快速开始
+## 🚀 快速开始
 
-### 使用Docker部署（推荐）
+### 环境要求
+- Node.js 18+ 
+- Python 3.8+
+- npm 或 yarn
 
-1. **克隆项目**
+### 1. 克隆项目
 ```bash
-git clone https://github.com/fpquenya/AI-Assistant.git
-cd AI-Assistant
+git clone <your-repo-url>
+cd AI工具箱
 ```
 
-2. **配置环境变量**
-```bash
-cp .env.docker .env
-# 编辑.env文件，填入你的Dify API密钥和应用ID
-```
+### 2. 环境变量配置
 
-3. **启动服务**
-```bash
-# Windows
-docker-start.bat
-
-# Linux/Mac
-./docker-start.sh
-```
-
-4. **访问应用**
-- 前端：http://localhost:3000
-- 后端API：http://localhost:8000
-
-### 本地开发
-
-#### 前端开发
-```bash
-npm install
-npm run dev
-```
-
-#### 后端开发
-```bash
-cd backend
-pip install -r requirements.txt
-uvicorn main:app --reload
-```
-
-## 环境变量配置
-
-创建`.env`文件并配置以下变量：
+创建 `.env` 文件并配置以下变量：
 
 ```env
 # Dify AI配置
@@ -116,22 +71,52 @@ DIFY_BASE_URL=https://api.dify.ai/v1
 DIFY_TRANSLATION_APP_ID=your_translation_app_id_here
 DIFY_CONTRACT_APP_ID=your_contract_app_id_here
 
-# 前端配置
-VITE_API_BASE_URL=http://localhost:8000
-VITE_DIFY_API_KEY=your_dify_api_key_here
-VITE_DIFY_BASE_URL=https://api.dify.ai/v1
+# 服务器配置
+HOST=127.0.0.1
+PORT=5173
 ```
 
-## API文档
+### 3. 安装依赖
 
-启动后端服务后，访问 http://localhost:8000/docs 查看自动生成的API文档。
+#### 前端依赖
+```bash
+npm install
+```
 
-## 项目结构
+#### 后端依赖
+```bash
+cd backend
+pip install -r requirements.txt
+```
+
+### 4. 启动服务
+
+#### 启动后端服务
+```bash
+cd backend
+python main.py
+# 或使用uvicorn
+uvicorn main:app --host 127.0.0.1 --port 5173 --reload
+```
+
+#### 启动前端服务
+```bash
+npm run dev -- --host 127.0.0.1 --port 3000
+```
+
+### 5. 访问应用
+- 前端应用：http://127.0.0.1:3000
+- 后端API：http://127.0.0.1:5173
+- API文档：http://127.0.0.1:5173/docs
+
+## 📁 项目结构
 
 ```
 AI工具箱/
 ├── src/                    # 前端源码
 │   ├── components/          # 可复用组件
+│   │   ├── ui/             # UI基础组件
+│   │   └── layout/         # 布局组件
 │   ├── pages/              # 页面组件
 │   │   ├── Home.tsx            # 首页
 │   │   ├── ContractReview.tsx  # 合同审批页面
@@ -147,49 +132,45 @@ AI工具箱/
 │   ├── requirements.txt    # Python依赖列表
 │   └── .env.example        # 后端环境变量模板
 ├── public/                 # 静态资源
-├── docker/                 # Docker配置文件
-│   ├── Dockerfile.frontend # 前端Docker文件
-│   ├── Dockerfile.backend  # 后端Docker文件
-│   └── nginx.conf          # Nginx配置
 ├── package.json            # 前端依赖配置
 ├── vite.config.ts          # Vite构建配置
 ├── tailwind.config.js      # Tailwind CSS配置
 ├── tsconfig.json           # TypeScript配置
-├── docker-compose.yml      # Docker Compose配置
-├── .env.docker             # Docker环境变量
 ├── .gitignore              # Git忽略文件
 └── README.md               # 项目说明
 ```
 
-## 使用指南
+## 📖 使用指南
 
 ### 合同审批功能
-1. 进入合同审批页面
+1. 访问合同审批页面
 2. 选择合同类型（采购合同、销售合同、服务合同等）
 3. 上传合同文件（支持拖拽或点击上传）
+   - 支持格式：PDF、DOC、DOCX、TXT
+   - 文件大小：最大10MB
 4. 点击"开始审批"按钮
-5. 查看AI生成的审批建议，包括：
-   - 风险等级评估（高、中、低风险颜色标识）
+5. 查看AI生成的审批建议：
+   - 🔴 高风险、🟡 中风险、🟢 低风险标识
    - 合规性分析
    - 具体建议和改进意见
 6. 可选择导出审批结果为DOCX文档
 
 ### 翻译功能
-1. 进入翻译页面
-2. 选择源语言和目标语言（支持多种语言互译）
-3. 输入需要翻译的文本（支持长文本）
+1. 访问翻译页面
+2. 选择源语言和目标语言
+3. 输入需要翻译的文本
 4. 点击翻译按钮获取结果
-5. 查看AI生成的翻译结果，包括：
+5. 查看翻译结果：
    - 翻译文本
    - 置信度评分
    - 语音朗读功能
    - 一键复制功能
 
-## 📈 API接口文档
+## 🔌 API接口文档
 
 ### 合同审批API
-```
-POST /api/contract-review
+```http
+POST /api/contract/review
 Content-Type: multipart/form-data
 
 参数：
@@ -198,75 +179,132 @@ Content-Type: multipart/form-data
 
 响应：
 {
-  "suggestions": "审批建议内容",
-  "risk_level": "风险等级",
-  "compliance_score": "合规性评分"
+  "success": true,
+  "data": {
+    "review_result": "审批建议内容",
+    "risk_level": "medium",
+    "compliance_score": 85,
+    "recommendation_level": "approve_with_conditions"
+  }
 }
 ```
 
 ### 翻译API
-```
-POST /api/translate
+```http
+POST /api/translation/translate
 Content-Type: application/json
 
 参数：
 {
-  "text": "待翻译文本",
-  "source_language": "源语言",
-  "target_language": "目标语言"
+  "text": "要翻译的文本",
+  "source_language": "zh",
+  "target_language": "en"
 }
 
 响应：
 {
-  "translation": "翻译结果",
-  "confidence": "置信度评分"
+  "success": true,
+  "data": {
+    "translated_text": "翻译结果",
+    "confidence_score": 0.95,
+    "source_language": "zh",
+    "target_language": "en"
+  }
 }
 ```
 
-## 📝 更新日志
+### 健康检查API
+```http
+GET /health
+GET /api/health
 
-### v1.2.0 (2024-01-XX)
-**新功能**
-- ✨ 添加风险评估可视化，支持风险等级颜色标识
-- ✨ 新增翻译置信度显示功能
-- ✨ 支持多语言翻译（中文、英语、日语、韩语、法语、德语、西班牙语）
-- ✨ 添加翻译结果语音朗读功能
-- ✨ 新增一键复制翻译结果功能
-- ✨ 支持源语言和目标语言快速切换
-- ✨ 添加常用翻译场景快捷选项
-- ✨ 新增合同关键指标自动解析和显示
-- ✨ 支持更多文件格式上传（PDF、DOC、DOCX、TXT）
-- ✨ 添加文件大小限制（最大10MB）
+响应：
+{
+  "status": "healthy",
+  "timestamp": "2024-01-20T10:30:00Z"
+}
+```
 
-**问题修复**
-- 🐛 修复翻译API响应字段解析错误
-- 🐛 修复语言参数映射问题
-- 🐛 修复Dify API参数字段名称不匹配问题
-- 🐛 优化前端语言名称映射逻辑
-- 🐛 修复翻译功能在特定语言组合下的错误
+## 🔧 开发指南
 
-**性能优化**
-- ⚡ 优化翻译请求处理逻辑
-- ⚡ 改进错误处理和用户反馈
-- ⚡ 优化文件上传验证机制
-- ⚡ 提升合同审批结果解析准确性
+### 前端开发
+```bash
+# 安装依赖
+npm install
 
-### v1.1.0 (2024-01-XX)
-**新功能**
-- ✨ 添加Docker容器化部署支持
-- ✨ 新增DOCX文档导出功能
-- ✨ 支持拖拽文件上传
-- ✨ 添加Markdown格式审批结果显示
+# 启动开发服务器
+npm run dev
 
-### v1.0.0 (2024-01-XX)
-**初始版本**
-- 🎉 基础合同审批功能
-- 🎉 基础翻译功能
-- 🎉 React + TypeScript + Vite前端架构
-- 🎉 FastAPI后端服务
-- 🎉 Dify AI服务集成
+# 构建生产版本
+npm run build
 
-## 贡献指南
+# 预览生产版本
+npm run preview
+
+# 代码检查
+npm run lint
+
+# 类型检查
+npm run type-check
+```
+
+### 后端开发
+```bash
+# 安装依赖
+pip install -r requirements.txt
+
+# 启动开发服务器
+python main.py
+
+# 或使用uvicorn（推荐）
+uvicorn main:app --reload --host 127.0.0.1 --port 5173
+```
+
+### 代理配置
+
+前端开发时，Vite会自动将 `/api` 请求代理到后端服务器：
+
+```typescript
+// vite.config.ts
+export default defineConfig({
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://127.0.0.1:5173',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '')
+      }
+    }
+  }
+})
+```
+
+## 🚀 部署指南
+
+### 生产环境部署
+
+1. **构建前端**
+```bash
+npm run build
+```
+
+2. **配置环境变量**
+```bash
+# 生产环境配置
+DIFY_API_KEY=your_production_api_key
+DIFY_BASE_URL=https://api.dify.ai/v1
+HOST=0.0.0.0
+PORT=5173
+```
+
+3. **启动后端服务**
+```bash
+uvicorn main:app --host 0.0.0.0 --port 5173
+```
+
+4. **配置反向代理**（推荐使用Nginx）
+
+## 🤝 贡献指南
 
 1. Fork 项目
 2. 创建特性分支 (`git checkout -b feature/AmazingFeature`)
@@ -274,17 +312,46 @@ Content-Type: application/json
 4. 推送到分支 (`git push origin feature/AmazingFeature`)
 5. 打开 Pull Request
 
-## 许可证
+## 📄 许可证
 
 本项目采用 MIT 许可证 - 查看 [LICENSE](LICENSE) 文件了解详情。
 
-## 联系方式
+## 🆘 故障排除
+
+### 常见问题
+
+1. **CORS错误**
+   - 确保后端CORS配置正确
+   - 检查前端请求URL是否正确
+
+2. **API连接失败**
+   - 确认后端服务正在运行
+   - 检查环境变量配置
+   - 验证Dify API密钥是否有效
+
+3. **文件上传失败**
+   - 检查文件大小是否超过10MB
+   - 确认文件格式是否支持
+   - 验证后端文件处理配置
+
+4. **翻译服务超时**
+   - 检查网络连接
+   - 确认Dify服务状态
+   - 减少翻译文本长度
+
+### 日志查看
+
+- 前端日志：浏览器开发者工具控制台
+- 后端日志：终端输出或日志文件
+
+## 📞 联系方式
 
 如有问题或建议，请通过以下方式联系：
 
-- 项目Issues：[GitHub Issues](https://github.com/fpquenya/AI-Assistant/issues)
-- 邮箱：your-email@example.com
+- 提交 Issue
+- 发送邮件
+- 创建 Discussion
 
 ---
 
-⭐ 如果这个项目对你有帮助，请给它一个星标！
+**感谢使用AI工具箱！** 🎉
