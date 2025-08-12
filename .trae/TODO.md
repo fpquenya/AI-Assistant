@@ -1,5 +1,6 @@
 # TODO:
 
-- [x] update-readme: 更新README.md文档，包含项目介绍、功能说明、技术栈、安装步骤和使用方法 (priority: High)
-- [ ] init-git-repo: 初始化git仓库，添加所有文件并创建初始提交 (**IN PROGRESS**) (priority: High)
-- [ ] prepare-github-sync: 准备将代码同步到GitHub仓库 (priority: Medium)
+- [x] fix-docker-compose-port: 修正docker-compose.yml中的后端端口映射从8000改为5173 (priority: High)
+- [x] fix-dockerfile-backend-port: 修正Dockerfile.backend中的EXPOSE端口从8000改为5173 (priority: High)
+- [x] fix-nginx-proxy-port: 修正nginx.conf中的代理端口从8000改为5173 (priority: High)
+- [x] fix-env-docker-port: 修正.env.docker中的相关端口配置 (priority: Medium)

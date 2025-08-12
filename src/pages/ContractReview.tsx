@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import { Upload, FileText, AlertTriangle, CheckCircle, ArrowLeft, Loader2, AlertCircle, Download, Shield, TrendingUp, BarChart3, Award, Clock, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
