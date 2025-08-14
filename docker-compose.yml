@@ -1,4 +1,5 @@
-version: '3.8'
+# Docker Compose配置文件 (兼容版本1和2)
+# 移除了version字段以兼容旧版本Docker Compose
 
 services:
   frontend:
@@ -11,8 +12,6 @@ services:
       - backend
     environment:
       - NODE_ENV=production
-    networks:
-      - ai-toolbox-network
 
   backend:
     build:
@@ -26,19 +25,12 @@ services:
       - PYTHONPATH=/app
       - HOST=0.0.0.0
       - PORT=5173
-    networks:
-      - ai-toolbox-network
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5173/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
+    # 简化的健康检查，兼容旧版本
+    # healthcheck:
+    #   test: ["CMD", "curl", "-f", "http://localhost:5173/health"]
+    #   interval: 30s
+    #   timeout: 10s
+    #   retries: 3
 
-networks:
-  ai-toolbox-network:
-    driver: bridge
-
-volumes:
-  backend_data:
-    driver: local
+# 移除了networks配置以兼容旧版本
+# 移除了volumes配置（如不需要持久化存储）
