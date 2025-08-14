@@ -43,9 +43,7 @@ const Home: React.FC = () => {
                 <p className="text-sm text-gray-600">智能办公，高效便捷</p>
               </div>
             </div>
-            <div className="text-sm text-gray-500">
-              Powered by Dify AI
-            </div>
+
           </div>
         </div>
       </header>
@@ -67,7 +65,7 @@ const Home: React.FC = () => {
           {/* DingTalk AI Assistant */}
           <div className="mb-16">
             <iframe 
-              src="https://agent.dingtalk.com/copilot?code=GJ8mrGlJQC&channel=" 
+              src="http://113.45.43.33/chatbot/IT2BvnXdgcbaaHms" 
               style={{width: '100%', height: '100%', minHeight: '700px'}} 
               frameBorder="0" 
               allow="microphone"

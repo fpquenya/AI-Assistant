@@ -33,6 +33,8 @@
 - **Tailwind CSS** - 实用优先的CSS框架
 - **Lucide React** - 美观的图标库
 - **React Router** - 客户端路由管理
+- **Zustand** - 轻量级状态管理
+- **Sonner** - 优雅的通知组件
 
 ### 后端技术
 - **FastAPI** - 现代Python Web框架
@@ -46,6 +48,13 @@
 ### AI服务
 - **Dify AI平台** - 提供翻译和合同审批AI能力
 - **工作流API** - 智能处理和分析
+- **聊天机器人** - 集成智能对话功能
+
+### 部署技术
+- **Docker** + **Docker Compose** - 容器化部署
+- **Nginx** - 反向代理和静态文件服务
+- **Vercel** - 前端托管平台
+- **Railway** - 后端部署平台（可选）
 
 ## 🚀 快速开始
 
@@ -53,6 +62,7 @@
 - Node.js 18+ 
 - Python 3.8+
 - npm 或 yarn
+- Docker 和 Docker Compose（可选，用于容器化部署）
 
 ### 1. 克隆项目
 ```bash
@@ -74,6 +84,9 @@ DIFY_CONTRACT_APP_ID=your_contract_app_id_here
 # 服务器配置
 HOST=127.0.0.1
 PORT=5173
+
+# 前端配置
+VITE_API_BASE_URL=http://127.0.0.1:5173
 ```
 
 ### 3. 安装依赖
@@ -101,11 +114,11 @@ uvicorn main:app --host 127.0.0.1 --port 5173 --reload
 
 #### 启动前端服务
 ```bash
-npm run dev -- --host 127.0.0.1 --port 3000
+npm run dev
 ```
 
 ### 5. 访问应用
-- 前端应用：http://127.0.0.1:3000
+- 前端应用：http://localhost:5173
 - 后端API：http://127.0.0.1:5173
 - API文档：http://127.0.0.1:5173/docs
 
@@ -115,14 +128,13 @@ npm run dev -- --host 127.0.0.1 --port 3000
 AI工具箱/
 ├── src/                    # 前端源码
 │   ├── components/          # 可复用组件
-│   │   ├── ui/             # UI基础组件
-│   │   └── layout/         # 布局组件
+│   │   └── Empty.tsx       # 空状态组件
 │   ├── pages/              # 页面组件
-│   │   ├── Home.tsx            # 首页
+│   │   ├── Home.tsx            # 首页（聊天机器人界面）
 │   │   ├── ContractReview.tsx  # 合同审批页面
 │   │   └── Translator.tsx      # 翻译页面
 │   ├── hooks/              # 自定义Hooks
-│   ├── utils/              # 工具函数
+│   │   └── useTheme.ts     # 主题管理Hook
 │   ├── types/              # TypeScript类型定义
 │   ├── App.tsx             # 主应用组件
 │   ├── main.tsx            # 应用入口文件
@@ -130,8 +142,29 @@ AI工具箱/
 ├── backend/                # 后端源码
 │   ├── main.py             # FastAPI主应用
 │   ├── requirements.txt    # Python依赖列表
-│   └── .env.example        # 后端环境变量模板
+│   ├── .env.example        # 后端环境变量模板
+│   └── railway.json        # Railway部署配置
+├── docs/                   # 文档目录
+│   └── 合同审批指标说明.md   # 合同审批功能说明
 ├── public/                 # 静态资源
+│   └── favicon.svg         # 网站图标
+├── .trae/                  # Trae AI配置
+│   ├── TODO.md             # 待办事项
+│   └── documents/          # 项目文档
+│       ├── AI工具箱产品需求文档.md
+│       └── AI工具箱技术架构文档.md
+├── docker-compose.yml      # Docker Compose配置
+├── Dockerfile.frontend     # 前端Docker镜像
+├── Dockerfile.backend      # 后端Docker镜像
+├── nginx.conf              # Nginx配置文件
+├── .env.docker             # Docker环境变量
+├── .dockerignore           # Docker忽略文件
+├── docker-start.bat        # Windows Docker启动脚本
+├── docker-start.ps1        # PowerShell Docker启动脚本
+├── docker-start.sh         # Linux/Mac Docker启动脚本
+├── DOCKER_DEPLOY.md        # Docker部署文档
+├── vercel.json             # Vercel部署配置
+├── .vercelignore           # Vercel忽略文件
 ├── package.json            # 前端依赖配置
 ├── vite.config.ts          # Vite构建配置
 ├── tailwind.config.js      # Tailwind CSS配置
@@ -281,7 +314,62 @@ export default defineConfig({
 
 ## 🚀 部署指南
 
-### 生产环境部署
+### Docker 容器化部署（推荐）
+
+#### 一键部署
+```bash
+# Windows
+.\docker-start.bat
+
+# Linux/Mac
+./docker-start.sh
+
+# 或使用 PowerShell
+.\docker-start.ps1
+```
+
+#### 手动部署
+```bash
+# 1. 配置环境变量
+cp .env.docker .env
+# 编辑 .env 文件，填入你的 Dify API 配置
+
+# 2. 构建并启动服务
+docker-compose up -d --build
+
+# 3. 查看服务状态
+docker-compose ps
+
+# 4. 查看日志
+docker-compose logs -f
+```
+
+#### 访问应用
+- 前端应用：http://localhost:3000
+- 后端API：http://localhost:5173
+- API文档：http://localhost:5173/docs
+
+#### Docker 管理命令
+```bash
+# 停止服务
+docker-compose down
+
+# 重启服务
+docker-compose restart
+
+# 更新服务
+git pull
+docker-compose down
+docker-compose up -d --build
+
+# 查看资源使用
+docker-compose top
+docker stats
+```
+
+### 传统部署方式
+
+#### 生产环境部署
 
 1. **构建前端**
 ```bash
@@ -303,6 +391,44 @@ uvicorn main:app --host 0.0.0.0 --port 5173
 ```
 
 4. **配置反向代理**（推荐使用Nginx）
+
+### Vercel 部署
+
+项目已配置 Vercel 部署支持：
+
+1. **连接 GitHub 仓库到 Vercel**
+2. **配置环境变量**：
+   - `DIFY_API_KEY`
+   - `DIFY_TRANSLATION_APP_ID`
+   - `DIFY_CONTRACT_APP_ID`
+3. **自动部署**：推送到主分支即可触发部署
+
+### 服务器部署（Docker）
+
+在服务器上使用 Docker 部署：
+
+```bash
+# 1. 安装 Docker 和 Docker Compose
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+sudo curl -L "https://github.com/docker/compose/releases/download/v2.20.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+
+# 2. 克隆项目
+git clone <your-repo-url>
+cd AI工具箱
+
+# 3. 配置环境变量
+cp .env.docker .env
+vim .env  # 编辑配置文件
+
+# 4. 启动服务
+docker-compose up -d --build
+
+# 5. 配置防火墙（如需要）
+sudo ufw allow 3000
+sudo ufw allow 5173
+```
 
 ## 🤝 贡献指南
 
