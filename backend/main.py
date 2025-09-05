@@ -300,12 +300,28 @@ async def translate_text(request: TranslationRequest):
                 detail=f"文本长度过长 ({text_length} 字符)，请分段翻译。建议单次翻译不超过5000字符。"
             )
         
+        # 语言参数映射：将前端传递的英文格式转换为Dify工作流期望的中文格式
+        language_mapping = {
+            "en": "英语",
+            "zh": "中文",
+            "english": "英语",
+            "chinese": "中文",
+            "英语": "英语",
+            "中文": "中文"
+        }
+        
+        # 转换语言参数
+        source_lang_mapped = language_mapping.get(request.source_language.lower(), request.source_language)
+        target_lang_mapped = language_mapping.get(request.target_language.lower(), request.target_language)
+        
+        print(f"[DEBUG] 语言参数映射: {request.source_language} -> {source_lang_mapped}, {request.target_language} -> {target_lang_mapped}")
+        
         # 准备工作流输入数据
         workflow_data = {
             "inputs": {
                 "source_text": request.text,
-                "source_lang": request.source_language,
-                "target_lang": request.target_language
+                "source_lang": source_lang_mapped,
+                "target_lang": target_lang_mapped
             },
             "response_mode": "blocking",
             "user": "ai-toolbox-user"

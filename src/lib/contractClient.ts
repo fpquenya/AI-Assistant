@@ -41,10 +41,10 @@ export interface FileUploadResponse {
 }
 
 class ContractClient {
-  private baseURL = '/api';
+  private baseURL = 'http://localhost:8000';
   
   constructor() {
-    this.baseURL = '/api';
+    this.baseURL = 'http://localhost:8000';
   }
   
   /**

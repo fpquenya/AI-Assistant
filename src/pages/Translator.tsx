@@ -12,6 +12,7 @@ const Translator: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<DifyTranslationResult | null>(null);
   const [error, setError] = useState<string>('');
+  const [errorDetails, setErrorDetails] = useState<any>(null);
   const [, setConfidence] = useState(0);
 
   // 源语言选项：英语和中文
@@ -96,13 +97,62 @@ const Translator: React.FC = () => {
       } else {
         console.log('Translator.tsx - API返回失败，错误信息:', apiResult.message);
         setError(apiResult.message || '翻译失败，请重试');
+        
+        // 设置详细错误信息
+        if (apiResult.errorDetails) {
+          const errorInfo = {
+            timestamp: new Date().toISOString(),
+            apiUrl: apiResult.errorDetails.requestUrl || `http://127.0.0.1:8000/api/translation/translate`,
+            requestParams: {
+              text: sourceText,
+              source_language: getLanguageName(sourceLang),
+              target_language: getLanguageName(targetLang)
+            },
+            httpDetails: {
+              status: apiResult.errorDetails.httpStatus,
+              statusText: apiResult.errorDetails.httpStatusText,
+              responseBody: apiResult.errorDetails.responseBody,
+              requestMethod: apiResult.errorDetails.requestMethod,
+              requestHeaders: apiResult.errorDetails.requestHeaders,
+              requestBody: apiResult.errorDetails.requestBody
+            },
+            error: {
+              message: apiResult.message || '未知错误',
+              name: 'APIError'
+            },
+            userAgent: navigator.userAgent,
+            currentUrl: window.location.href
+          };
+          setErrorDetails(errorInfo);
+        }
+        
         setResult(null);
         setConfidence(0);
       }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : '翻译服务暂时不可用，请稍后重试';
       setError(errorMessage);
-      console.error('翻译错误:', err);
+      
+      // 收集详细错误信息
+      const errorInfo = {
+        timestamp: new Date().toISOString(),
+        apiUrl: `http://127.0.0.1:8000/api/translation/translate`,
+        requestParams: {
+          text: sourceText,
+          source_language: getLanguageName(sourceLang),
+          target_language: getLanguageName(targetLang)
+        },
+        error: {
+          message: err instanceof Error ? err.message : String(err),
+          stack: err instanceof Error ? err.stack : undefined,
+          name: err instanceof Error ? err.name : 'UnknownError'
+        },
+        userAgent: navigator.userAgent,
+        currentUrl: window.location.href
+      };
+      
+      setErrorDetails(errorInfo);
+      console.error('翻译错误详情:', errorInfo);
     } finally {
       setIsLoading(false);
     }
@@ -310,20 +360,135 @@ const Translator: React.FC = () => {
 
           {/* 错误信息 */}
           {error && (
-            <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-md">
-              <div className="flex items-center justify-between">
+            <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-md">
+              <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center">
                   <div className="text-red-600 mr-2">⚠️</div>
                   <span className="text-red-700 font-medium">翻译失败</span>
                 </div>
                 <button
-                  onClick={() => setError('')}
+                  onClick={() => {
+                    setError('');
+                    setErrorDetails(null);
+                  }}
                   className="text-sm text-red-600 hover:text-red-800 underline"
                 >
                   关闭
                 </button>
               </div>
-              <p className="text-red-700 mt-1">{error}</p>
+              
+              {/* 基本错误信息 */}
+              <div className="mb-3">
+                <p className="text-red-700 font-medium">错误信息：</p>
+                <p className="text-red-600 text-sm bg-red-100 p-2 rounded mt-1">{error}</p>
+              </div>
+              
+              {/* 详细错误信息 */}
+              {errorDetails && (
+                <details className="mt-3">
+                  <summary className="cursor-pointer text-red-700 font-medium hover:text-red-800">
+                    查看详细错误信息 (用于调试)
+                  </summary>
+                  <div className="mt-2 p-3 bg-red-100 rounded text-xs font-mono">
+                     <div className="mb-2">
+                       <strong>时间：</strong> {errorDetails.timestamp}
+                     </div>
+                     <div className="mb-2">
+                       <strong>API地址：</strong> {errorDetails.apiUrl}
+                     </div>
+                     
+                     {/* HTTP状态信息 */}
+                     {errorDetails.httpDetails && (
+                       <div className="mb-2">
+                         <strong>HTTP状态：</strong> 
+                         <span className={`ml-1 px-2 py-1 rounded ${
+                           errorDetails.httpDetails.status >= 500 ? 'bg-red-200 text-red-800' :
+                           errorDetails.httpDetails.status >= 400 ? 'bg-orange-200 text-orange-800' :
+                           'bg-gray-200 text-gray-800'
+                         }`}>
+                           {errorDetails.httpDetails.status} {errorDetails.httpDetails.statusText}
+                         </span>
+                       </div>
+                     )}
+                     
+                     <div className="mb-2">
+                       <strong>请求参数：</strong>
+                       <pre className="mt-1 text-xs overflow-x-auto bg-white p-2 rounded border">
+{JSON.stringify(errorDetails.requestParams, null, 2)}
+                       </pre>
+                     </div>
+                     
+                     {/* HTTP请求详情 */}
+                     {errorDetails.httpDetails && (
+                       <div className="mb-2">
+                         <strong>HTTP请求详情：</strong>
+                         <div className="mt-1 bg-white p-2 rounded border">
+                           <div><strong>方法：</strong> {errorDetails.httpDetails.requestMethod}</div>
+                           {errorDetails.httpDetails.requestHeaders && (
+                             <div className="mt-1">
+                               <strong>请求头：</strong>
+                               <pre className="text-xs mt-1">
+{JSON.stringify(errorDetails.httpDetails.requestHeaders, null, 2)}
+                               </pre>
+                             </div>
+                           )}
+                           {errorDetails.httpDetails.requestBody && (
+                             <div className="mt-1">
+                               <strong>请求体：</strong>
+                               <pre className="text-xs mt-1 max-h-20 overflow-y-auto">
+{errorDetails.httpDetails.requestBody}
+                               </pre>
+                             </div>
+                           )}
+                         </div>
+                       </div>
+                     )}
+                     
+                     {/* 服务器响应 */}
+                     {errorDetails.httpDetails?.responseBody && (
+                       <div className="mb-2">
+                         <strong>服务器响应：</strong>
+                         <pre className="mt-1 text-xs overflow-x-auto bg-white p-2 rounded border max-h-32 overflow-y-auto">
+{errorDetails.httpDetails.responseBody}
+                         </pre>
+                       </div>
+                     )}
+                     
+                     <div className="mb-2">
+                       <strong>错误类型：</strong> {errorDetails.error.name}
+                     </div>
+                     <div className="mb-2">
+                       <strong>错误消息：</strong> {errorDetails.error.message}
+                     </div>
+                     {errorDetails.error.stack && (
+                       <div className="mb-2">
+                         <strong>错误堆栈：</strong>
+                         <pre className="mt-1 text-xs overflow-x-auto max-h-32 overflow-y-auto bg-white p-2 rounded border">
+{errorDetails.error.stack}
+                         </pre>
+                       </div>
+                     )}
+                     <div className="mb-2">
+                       <strong>浏览器：</strong> {errorDetails.userAgent}
+                     </div>
+                     <div>
+                       <strong>当前页面：</strong> {errorDetails.currentUrl}
+                     </div>
+                   </div>
+                </details>
+              )}
+              
+              {/* 解决建议 */}
+              <div className="mt-3 p-2 bg-yellow-50 border border-yellow-200 rounded">
+                <p className="text-yellow-800 font-medium text-sm">💡 解决建议：</p>
+                <ul className="text-yellow-700 text-sm mt-1 list-disc list-inside space-y-1">
+                  <li>检查后端服务是否正常运行 (http://127.0.0.1:8000)</li>
+                  <li>确认网络连接是否正常</li>
+                  <li>检查浏览器控制台是否有CORS错误</li>
+                  <li>验证API密钥配置是否正确</li>
+                  <li>如果是部署环境，检查服务器配置和防火墙设置</li>
+                </ul>
+              </div>
             </div>
           )}
 

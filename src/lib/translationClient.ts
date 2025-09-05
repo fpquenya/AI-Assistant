@@ -6,6 +6,16 @@ export interface TranslationResult {
     confidence: number;
   };
   message?: string;
+  errorDetails?: {
+    httpStatus?: number;
+    httpStatusText?: string;
+    responseBody?: string;
+    requestUrl?: string;
+    requestMethod?: string;
+    requestHeaders?: Record<string, string>;
+    requestBody?: string;
+    timestamp?: string;
+  };
 }
 
 // 翻译API响应接口
@@ -14,7 +24,7 @@ export class TranslationClient {
   private baseURL: string;
 
   constructor() {
-    this.baseURL = 'http://127.0.0.1:5173';
+    this.baseURL = 'http://localhost:8000';
   }
 
 
@@ -40,8 +50,28 @@ export class TranslationClient {
       
       if (!response.ok) {
         const errorText = await response.text();
-        console.error('翻译API调用失败:', response.status, response.statusText, errorText);
-        throw new Error(`翻译失败: ${response.status} ${response.statusText} - ${errorText}`);
+        const errorDetails = {
+          httpStatus: response.status,
+          httpStatusText: response.statusText,
+          responseBody: errorText,
+          requestUrl: `${this.baseURL}/api/translation/translate`,
+          requestMethod: 'POST',
+          requestHeaders: {
+            'Content-Type': 'application/json'
+          },
+          requestBody: JSON.stringify({
+            text: text,
+            source_language: sourceLanguage,
+            target_language: targetLanguage
+          }),
+          timestamp: new Date().toISOString()
+        };
+        
+        console.error('翻译API调用失败:', errorDetails);
+        
+        const error = new Error(`翻译失败: ${response.status} ${response.statusText} - ${errorText}`);
+        (error as any).errorDetails = errorDetails;
+        throw error;
       }
       
       const result = await response.json();
@@ -52,14 +82,35 @@ export class TranslationClient {
       console.error('翻译失败:', error);
       
       let errorMessage = 'API调用失败，请稍后重试';
+      let errorDetails: any = {
+        timestamp: new Date().toISOString(),
+        requestUrl: `${this.baseURL}/api/translation/translate`,
+        requestMethod: 'POST'
+      };
       
       if (error instanceof Error) {
         errorMessage = error.message;
         
+        // 检查是否有详细的HTTP错误信息
+        if ((error as any).errorDetails) {
+          errorDetails = { ...errorDetails, ...(error as any).errorDetails };
+        }
+        
         if (error.message.includes('400')) {
           errorMessage = `请求参数错误: ${error.message}`;
-        } else if (error.message.includes('网络') || error.message.includes('fetch')) {
+        } else if (error.message.includes('401')) {
+          errorMessage = `认证失败: ${error.message}`;
+        } else if (error.message.includes('403')) {
+          errorMessage = `权限不足: ${error.message}`;
+        } else if (error.message.includes('404')) {
+          errorMessage = `API接口不存在: ${error.message}`;
+        } else if (error.message.includes('500')) {
+          errorMessage = `服务器内部错误: ${error.message}`;
+        } else if (error.message.includes('502') || error.message.includes('503') || error.message.includes('504')) {
+          errorMessage = `服务器暂时不可用: ${error.message}`;
+        } else if (error.message.includes('网络') || error.message.includes('fetch') || error.name === 'TypeError') {
           errorMessage = '网络连接失败，请检查网络连接和后端服务状态';
+          errorDetails.networkError = true;
         }
       }
       
@@ -69,7 +120,8 @@ export class TranslationClient {
           translatedText: '',
           confidence: 0
         },
-        message: errorMessage
+        message: errorMessage,
+        errorDetails: errorDetails
       };
     }
   }
